@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { init } from "./reducers";
 
 import Header from "./shared/Header";
-import RentalList from "./components/rental/rental-listing/RentalList";
+import RentalListing from "./components/rental/rental-listing/RentalListing";
 import RentalDetail from "./components/rental/rental-detail/RentalDetail";
 import "./App.css";
 
@@ -20,7 +20,7 @@ class App extends Component {
             <Header />
             <div className="container">
               <Switch>
-                <Route exact path="/rentals" component={RentalList} />
+                <Route exact path="/rentals" component={RentalListing} />
                 <Route exact path="/rentals/:id" component={RentalDetail} />
                 <Redirect to="/rentals" />
               </Switch>
