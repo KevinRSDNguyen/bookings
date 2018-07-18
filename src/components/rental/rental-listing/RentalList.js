@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import RentalCard from "./RentalCard";
 
-import { fetchRentals } from "actions/index";
-
 class RentalList extends Component {
   renderRentals = () => {
     return this.props.rentals.map((rental, i) => {
@@ -13,11 +11,5 @@ class RentalList extends Component {
     return <div className="row">{this.renderRentals()}</div>;
   }
 }
-
-const mapStateToProps = state => {
-  return {
-    rentals: state.rentals.data
-  };
-};
 
 export default RentalList;
