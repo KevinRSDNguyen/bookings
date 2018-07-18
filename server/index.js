@@ -1,9 +1,20 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const config = require("./config");
+const Rental = require("./models/rental");
 const path = require("path");
 
+mongoose.connect(
+  config.DB_URI,
+  { useNewUrlParser: true }
+);
+
 const app = express();
+
+app.get("/rentals", (req, res) => {
+  res.json({ success: true });
+});
 
 app.use(bodyParser.json());
 
