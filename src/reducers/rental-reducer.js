@@ -7,69 +7,36 @@ import {
 } from "../actions/types";
 
 const INITIAL_STATE = {
-  data: [
-    {
-      id: 1,
-      title: "Central Apartment",
-      city: "New York",
-      street: "Times Sqaure",
-      category: "apartment",
-      image: "http://via.placeholder.com/350x250",
-      bedrooms: 3,
-      description: "Very nice apartment",
-      dailyRate: 34,
-      shared: false,
-      createdAt: "24/12/2017"
-    },
-    {
-      id: 2,
-      title: "Central Apartment 2",
-      city: "San Francisco",
-      street: "Main street",
-      category: "condo",
-      image: "http://via.placeholder.com/350x250",
-      bedrooms: 2,
-      description: "Very nice apartment",
-      dailyRate: 12,
-      shared: true,
-      createdAt: "24/12/2017"
-    },
-    {
-      id: 3,
-      title: "Central Apartment 3",
-      city: "Bratislava",
-      street: "Hlavna",
-      category: "condo",
-      image: "http://via.placeholder.com/350x250",
-      bedrooms: 2,
-      description: "Very nice apartment",
-      dailyRate: 334,
-      shared: true,
-      createdAt: "24/12/2017"
-    },
-    {
-      id: 4,
-      title: "Central Apartment 4",
-      city: "Berlin",
-      street: "Haupt strasse",
-      category: "house",
-      image: "http://via.placeholder.com/350x250",
-      bedrooms: 9,
-      description: "Very nice apartment",
-      dailyRate: 33,
-      shared: true,
-      createdAt: "24/12/2017"
-    }
-  ]
+  rentals: {
+    data: [],
+    errors: []
+  },
+  rental: {
+    data: {}
+  }
 };
 
-export const rentalReducer = (state = INITIAL_STATE, action) => {
+export const rentalReducer = (state = INITIAL_STATE.rentals, action) => {
   switch (action.type) {
-    case "FETCH_RENTALS":
-      return {
-        ...state,
-        data: action.rentals
-      };
+    case FETCH_RENTALS_INIT:
+      return { ...state, data: [], errors: [] };
+    case FETCH_RENTALS_SUCCESS:
+      return { ...state, data: action.rentals };
+    case FETCH_RENTALS_FAIL:
+      // return Object.assign({}, state, { errors: action.errors, data: [] });
+      return { ...state, errors: action.erros, data: [] };
+    default:
+      return state;
+  }
+};
+
+export const selectedRentalReducer = (state = INITIAL_STATE.rental, action) => {
+  switch (action.type) {
+    case FETCH_RENTAL_BY_ID_INIT:
+      return { ...state, data: {} };
+    case FETCH_RENTAL_BY_ID_SUCCESS:
+      // return Object.assign({}, state, { data: action.rental });
+      return { ...state, data: action.rental };
     default:
       return state;
   }

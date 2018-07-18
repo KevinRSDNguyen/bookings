@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import RentalCard from "./RentalCard";
 
-import { fetchRentals } from "../../actions/index";
+import { fetchRentals } from "actions/index";
 
 class RentalList extends Component {
   renderRentals = () => {

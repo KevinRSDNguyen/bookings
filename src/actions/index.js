@@ -67,6 +67,19 @@ const rentals = [
   }
 ];
 
+export const fetchRentalByIdInit = () => {
+  return {
+    type: FETCH_RENTAL_BY_ID_INIT
+  };
+};
+
+export const fetchRentalByIdSuccess = rental => {
+  return {
+    type: FETCH_RENTAL_BY_ID_SUCCESS,
+    rental
+  };
+};
+
 export const fetchRentals = city => {
   // const url = city ? `/rentals?city=${city}` : "/rentals";
   // return dispatch => {
