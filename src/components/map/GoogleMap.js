@@ -15,6 +15,7 @@ const MapComponent = ({ coordinates, isError, isLocationLoaded }) => {
       defaultZoom={13}
       defaultCenter={coordinates}
       center={coordinates}
+      options={{ disableDefaultUI: isError ? true : false }}
     >
       {!isError && <Circle center={coordinates} radius={500} />}
       {isError && (
