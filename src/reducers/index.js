@@ -1,11 +1,12 @@
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 
-import { rentalReducer } from "./rental-reducer";
+import { rentalReducer, selectedRentalReducer } from "./rental-reducer";
 
 export const init = () => {
   const reducer = combineReducers({
-    rentals: rentalReducer
+    rentals: rentalReducer,
+    rental: selectedRentalReducer
   });
 
   const composeEnhancers =

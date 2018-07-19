@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import RentalDetailInfo from "./RentalDetailInfo";
 import { connect } from "react-redux";
 import { fetchRentalById } from "actions/index";
 
@@ -8,16 +9,31 @@ class RentalDetail extends Component {
     this.props.fetchRentalById(rentalId);
   }
   render() {
-    const rental = this.props.rentals;
+    const { rental } = this.props;
 
-    if (rental) {
+    if (rental._id) {
       return (
-        <div>
-          <p>{rental.title}</p>
-          <p>{rental.city}</p>
-          <p>{rental.description}</p>
-          <p>{rental.dailyRate}</p>
-        </div>
+        <section id="rentalDetails">
+          <div className="upper-section">
+            <div className="row">
+              <div className="col-md-6">
+                <img src={rental.image} alt="" />
+              </div>
+              <div className="col-md-6">
+                <img src={rental.image} alt="" />
+              </div>
+            </div>
+          </div>
+
+          <div className="details-section">
+            <div className="row">
+              <div className="col-md-8">
+                <RentalDetailInfo rental={rental} />
+              </div>
+              <div className="col-md-4"> BOOKING</div>
+            </div>
+          </div>
+        </section>
       );
     } else {
       return <h1>Loading</h1>;
@@ -27,7 +43,7 @@ class RentalDetail extends Component {
 
 const mapStateToProps = state => {
   return {
-    rentals: state.rentals.data
+    rental: state.rental.data
   };
 };
 
