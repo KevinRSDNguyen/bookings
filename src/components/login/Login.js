@@ -1,11 +1,30 @@
 import React, { Component } from "react";
+import LoginForm from "./LoginForm";
 
 class Login extends Component {
+  submitCb(userData) {
+    console.log(userData);
+  }
   render() {
     return (
-      <div>
-        <p>Login Component</p>
-      </div>
+      <section id="login">
+        <div className="bwm-form">
+          <div className="row">
+            <div className="col-md-5">
+              <h1>Login</h1>
+              <LoginForm submitCb={this.submitCb} />
+            </div>
+            <div className="col-md-6 ml-auto">
+              <div className="image-container">
+                <h2 className="catchphrase">
+                  Hundreds of awesome places just in reach of a few clicks.
+                </h2>
+                <img src="" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 }
