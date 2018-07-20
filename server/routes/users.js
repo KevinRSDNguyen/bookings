@@ -1,15 +1,11 @@
 const express = require("express");
-// const User = require("../controllers/user");
+const User = require("../controllers/user");
 const router = express.Router();
 
 // ROUTE /api/v1/users/auth
-router.post("/auth", (req, res) => {
-  res.send("yo");
-});
+router.post("/auth", User.auth);
 
 // ROUTE /api/v1/users/register
-router.post("/register", (req, res) => {
-  res.send("yo");
-});
+router.post("/register", User.register);
 
 module.exports = router;
