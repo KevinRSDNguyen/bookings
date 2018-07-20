@@ -17,11 +17,9 @@ exports.auth = function(req, res) {
   User.findOne({ email })
     .then(user => {
       if (!user) {
-        return res
-          .status(422)
-          .send({
-            errors: [{ title: "Invalid User!", detail: "User does not exist" }]
-          });
+        return res.status(422).send({
+          errors: [{ title: "Invalid User!", detail: "User does not exist" }]
+        });
       }
 
       if (user.hasSamePassword(password)) {
@@ -36,13 +34,9 @@ exports.auth = function(req, res) {
 
         return res.json(token);
       } else {
-        return res
-          .status(422)
-          .send({
-            errors: [
-              { title: "Wrong Data!", detail: "Wrong email or password" }
-            ]
-          });
+        return res.status(422).send({
+          errors: [{ title: "Wrong Data!", detail: "Wrong email or password" }]
+        });
       }
     })
     .catch(err => {
@@ -97,3 +91,40 @@ exports.register = function(req, res) {
       return res.status(422).send({ errors: normalizeErrors(err.errors) });
     });
 };
+
+exports.authMiddleware = function(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (token) {
+    const user = parseToken(token);
+
+    User.findById(user.userId, function(err, user) {
+      if (err) {
+        return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      }
+
+      if (user) {
+        res.locals.user = user;
+        next();
+      } else {
+        return notAuthorized(res);
+      }
+    });
+  } else {
+    return notAuthorized(res);
+  }
+};
+
+function parseToken(token) {
+  return jwt.verify(token.split(" ")[1], config.SECRET);
+}
+
+function notAuthorized(res) {
+  return res
+    .status(401)
+    .send({
+      errors: [
+        { title: "Not authorized!", detail: "You need to login to get access!" }
+      ]
+    });
+}
