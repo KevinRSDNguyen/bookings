@@ -2,6 +2,7 @@ import * as jwt from "jsonwebtoken";
 import * as moment from "moment";
 
 class AuthService {
+  tokenKey = "auth_token";
   getToken() {
     return localStorage.getItem("auth_token");
   }

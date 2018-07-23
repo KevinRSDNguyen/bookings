@@ -19,7 +19,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
     case LOGIN_FAILURE:
       return { ...state, errors: action.errors };
     case LOGOUT:
-      return { ...state, isAuth: false, token: "", username: "" };
+      return { ...state, isAuth: false, token: "" };
     default:
       return state;
   }

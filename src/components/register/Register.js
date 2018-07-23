@@ -40,7 +40,10 @@ class Register extends Component {
                   As a member you have access to most awesome places in the
                   world.
                 </h2>
-                <img src="" alt="" />
+                <img
+                  src={process.env.PUBLIC_URL + "/img/register-image.jpg"}
+                  alt=""
+                />
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ const path = require("path");
 
 const rentalRoutes = require("./routes/rentals");
 const userRoutes = require("./routes/users");
+const bookingRoutes = require("./routes/bookings");
 
 mongoose
   .connect(
@@ -25,6 +26,7 @@ app.use(bodyParser.json());
 
 app.use("/api/v1/rentals", rentalRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/bookings", bookingRoutes);
 
 const PORT = process.env.PORT || 3001;
 

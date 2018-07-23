@@ -1,5 +1,6 @@
 import axios from "axios";
 import authService from "services/auth-service";
+import axiosService from "services/axios-service";
 
 import {
   FETCH_RENTAL_BY_ID_SUCCESS,
@@ -16,6 +17,8 @@ import {
 } from "./types";
 
 // Rental Actions
+const axiosInstance = axiosService.getInstance();
+
 export const fetchRentalByIdInit = () => {
   return {
     type: FETCH_RENTAL_BY_ID_INIT
@@ -37,7 +40,7 @@ const fetchRentalsSuccess = rentals => {
 };
 
 export const fetchRentals = () => dispatch => {
-  axios.get(`/api/v1/rentals`).then(({ data }) => {
+  axiosInstance.get(`/rentals`).then(({ data }) => {
     dispatch(fetchRentalsSuccess(data));
   });
 };
@@ -68,7 +71,7 @@ export const login = userData => dispatch => {
     .post("/api/v1/users/auth", userData)
     .then(res => res.data)
     .then(token => {
-      localStorage.setItem("auth_token", token);
+      authService.saveToken(token);
       dispatch(loginSuccess());
     })
     .catch(({ response }) => {
@@ -77,7 +80,7 @@ export const login = userData => dispatch => {
 };
 
 export const logout = () => {
-  authService.invalidateUser();
+  authService.invalidateUser(); // Clear local storage
 
   return {
     type: LOGOUT
