@@ -1,4 +1,5 @@
 import axios from "axios";
+import authService from "services/auth-service";
 
 import {
   FETCH_RENTAL_BY_ID_SUCCESS,
@@ -49,9 +50,49 @@ export const fetchRentalById = rentalId => dispatch => {
 };
 
 // Auth Actions
+const loginSuccess = () => {
+  return {
+    type: LOGIN_SUCCESS
+  };
+};
+
+const loginFailure = errors => {
+  return {
+    type: LOGIN_FAILURE,
+    errors
+  };
+};
+
+export const login = userData => dispatch => {
+  return axios
+    .post("/api/v1/users/auth", userData)
+    .then(res => res.data)
+    .then(token => {
+      localStorage.setItem("auth_token", token);
+      dispatch(loginSuccess());
+    })
+    .catch(({ response }) => {
+      dispatch(loginFailure(response.data.errors));
+    });
+};
+
+export const logout = () => {
+  authService.invalidateUser();
+
+  return {
+    type: LOGOUT
+  };
+};
+
 export const register = userData => {
   return axios
     .post("/api/v1/users/register", userData)
     .then(res => res.data, err => Promise.reject(err.response.data.errors));
   //2nd arg to .then is run in case of err. Alt to .catch()
+};
+
+export const checkAuthState = () => dispatch => {
+  if (authService.isAuthenticated()) {
+    dispatch(loginSuccess());
+  }
 };
