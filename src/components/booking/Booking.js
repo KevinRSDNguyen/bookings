@@ -39,7 +39,7 @@ class Booking extends Component {
         const dateRange = getRangeOfDates(
           booking.startAt,
           booking.endAt,
-          "Y/MM/DD"
+          "Y-MM-DD"
         );
         this.bookedOutDates.push(...dateRange);
       });
@@ -49,20 +49,20 @@ class Booking extends Component {
     const dateRange = getRangeOfDates(
       booking.startAt,
       booking.endAt,
-      "Y/MM/DD"
+      "Y-MM-DD"
     );
     this.bookedOutDates.push(...dateRange);
   };
   checkInvalidDates = date => {
     //Used to block out dates
     return (
-      this.bookedOutDates.includes(date.format("Y/MM/DD")) ||
+      this.bookedOutDates.includes(date.format("Y-MM-DD")) ||
       date.diff(moment(), "days") < 0 // Or if date is in the past
     );
   };
   handleApply = (event, picker) => {
-    const startAt = picker.startDate.format("Y/MM/DD");
-    const endAt = picker.endDate.format("Y/MM/DD");
+    const startAt = picker.startDate.format("Y-MM-DD");
+    const endAt = picker.endDate.format("Y-MM-DD");
 
     this.dateRef.current.value = startAt + " to " + endAt;
 

@@ -6,12 +6,11 @@ export const toUpperCase = value => (value ? titleize(value) : "");
 
 export const pretifyDate = date => moment(date).format("MMM Do YY");
 
-export const getRangeOfDates = (startAt, endAt, dateFormat = "Y/MM/DD") => {
-  debugger;
+export const getRangeOfDates = (startAt, endAt, dateFormat = "Y-MM-DD") => {
   const tempDates = [];
   const mEndAt = moment(endAt);
   let mStartAt = moment(startAt);
-  debugger;
+
   while (mStartAt < mEndAt) {
     tempDates.push(mStartAt.format(dateFormat));
     mStartAt = mStartAt.add(1, "day");
