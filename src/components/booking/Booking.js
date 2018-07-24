@@ -45,6 +45,14 @@ class Booking extends Component {
       });
     }
   };
+  addNewBookedOutDates = booking => {
+    const dateRange = getRangeOfDates(
+      booking.startAt,
+      booking.endAt,
+      "Y/MM/DD"
+    );
+    this.bookedOutDates.push(...dateRange);
+  };
   checkInvalidDates = date => {
     //Used to block out dates
     return (
@@ -101,8 +109,8 @@ class Booking extends Component {
   reserveRental = () => {
     actions.createBooking(this.state.proposedBooking).then(
       booking => {
-        // this.addNewBookedOutDates(booking);
-        // this.cancelConfirmation();
+        this.addNewBookedOutDates(booking);
+        this.cancelConfirmation(); // Closes Modal
         // this.resetData();
         // toast.success("Booking has been succesfuly created! Enjoy.");
       },
