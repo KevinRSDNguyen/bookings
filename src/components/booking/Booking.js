@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import DateRangePicker from "react-bootstrap-daterangepicker";
+import { ToastContainer, toast } from "react-toastify";
 import BookingModal from "./BookingModal";
 import { getRangeOfDates } from "helpers";
 import "bootstrap-daterangepicker/daterangepicker.css";
@@ -46,11 +47,7 @@ class Booking extends Component {
     }
   };
   addNewBookedOutDates = booking => {
-    const dateRange = getRangeOfDates(
-      booking.startAt,
-      booking.endAt,
-      "Y-MM-DD"
-    );
+    const dateRange = getRangeOfDates(booking.startAt, booking.endAt);
     this.bookedOutDates.push(...dateRange);
   };
   checkInvalidDates = date => {
@@ -89,6 +86,11 @@ class Booking extends Component {
       }
     });
   };
+  resetData = () => {
+    this.dateRef.current.value = "";
+
+    this.setState({ proposedBooking: { guests: "", startAt: "", endAt: "" } });
+  };
   confirmProposedData = () => {
     const { startAt, endAt } = this.state.proposedBooking;
     const days = getRangeOfDates(startAt, endAt).length - 1;
@@ -111,8 +113,8 @@ class Booking extends Component {
       booking => {
         this.addNewBookedOutDates(booking);
         this.cancelConfirmation(); // Closes Modal
-        // this.resetData();
-        // toast.success("Booking has been succesfuly created! Enjoy.");
+        this.resetData();
+        toast.success("Booking has been succesfuly created! Enjoy.");
       },
       errors => {
         this.setState({ errors });
@@ -124,6 +126,7 @@ class Booking extends Component {
     const { startAt, endAt, guests } = this.state.proposedBooking;
     return (
       <div className="booking">
+        <ToastContainer />
         <h3 className="booking-price">
           ${rental.dailyRate}{" "}
           <span className="booking-per-night">per night</span>
@@ -149,6 +152,7 @@ class Booking extends Component {
           <label htmlFor="guests">Guests</label>
           <input
             onChange={this.selectGuests}
+            value={guests}
             type="number"
             className="form-control"
             id="guests"

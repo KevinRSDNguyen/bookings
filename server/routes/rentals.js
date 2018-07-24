@@ -6,24 +6,6 @@ const { normalizeErrors } = require("../helpers/mongoose");
 
 const UserCtrl = require("../controllers/user");
 
-//ROUTE: /api/v1/rentals/secret
-router.get("/secret", UserCtrl.authMiddleware, function(req, res) {
-  res.json({ secret: true });
-});
-
-//ROUTE: /api/v1/rentals
-router.get("/", (req, res) => {
-  Rental.find({})
-    .select("-bookings") //Exclude booking info for each document
-    .exec()
-    .then(foundRentals => {
-      res.json(foundRentals);
-    })
-    .catch(err => {
-      res.status(422).json(err);
-    });
-});
-
 //ROUTE: /api/v1/rentals/:id
 router.get("/:id", (req, res) => {
   Rental.findById(req.params.id)
@@ -38,6 +20,31 @@ router.get("/:id", (req, res) => {
         errors: [{ title: "Rental Error!", detail: "Could not find rental" }]
       });
     });
+});
+
+//ROUTE: /api/v1/rentals/secret
+router.get("/secret", UserCtrl.authMiddleware, function(req, res) {
+  res.json({ secret: true });
+});
+
+//ROUTE: /api/v1/rentals
+router.get("/", (req, res) => {
+  const city = req.query.city;
+
+  if (city) {
+    return res.json({ city });
+  } else {
+    //Find all Rentals
+    Rental.find({})
+      .select("-bookings") //Exclude booking info for each document
+      .exec()
+      .then(foundRentals => {
+        res.json(foundRentals);
+      })
+      .catch(err => {
+        res.status(422).json(err);
+      });
+  }
 });
 
 module.exports = router;
