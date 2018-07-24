@@ -8,7 +8,7 @@ import RentalDetail from "./components/rental/rental-detail/RentalDetail";
 import Login from "components/login/Login";
 import Register from "components/register/Register";
 
-import ProtectedRoute from "components/shared/auth/ProtectedRoute";
+// import ProtectedRoute from "components/shared/auth/ProtectedRoute";
 import LoggedInRoute from "components/shared/auth/LoggedInRoute";
 
 import { checkAuthState, logout } from "actions";

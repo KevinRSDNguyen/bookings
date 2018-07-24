@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import DateRangePicker from "react-bootstrap-daterangepicker";
+import BookingModal from "./BookingModal";
 import { getRangeOfDates } from "helpers";
 import "bootstrap-daterangepicker/daterangepicker.css";
 
 import * as moment from "moment";
+import * as actions from "actions";
 
 class Booking extends Component {
   constructor() {
@@ -11,6 +13,7 @@ class Booking extends Component {
 
     this.bookedOutDates = [];
     this.dateRef = React.createRef();
+    //Used refs to set input value of start and end dates
 
     this.state = {
       proposedBooking: {
@@ -39,7 +42,6 @@ class Booking extends Component {
           "Y/MM/DD"
         );
         this.bookedOutDates.push(...dateRange);
-        console.log(this.bookedOutDates);
       });
     }
   };
@@ -50,8 +52,68 @@ class Booking extends Component {
       date.diff(moment(), "days") < 0 // Or if date is in the past
     );
   };
+  handleApply = (event, picker) => {
+    const startAt = picker.startDate.format("Y/MM/DD");
+    const endAt = picker.endDate.format("Y/MM/DD");
+
+    this.dateRef.current.value = startAt + " to " + endAt;
+
+    this.setState({
+      proposedBooking: {
+        ...this.state.proposedBooking,
+        startAt,
+        endAt
+      }
+    });
+  };
+  selectGuests = event => {
+    this.setState({
+      proposedBooking: {
+        ...this.state.proposedBooking,
+        guests: parseInt(event.target.value, 10)
+      }
+    });
+  };
+  cancelConfirmation = () => {
+    this.setState({
+      modal: {
+        open: false
+      }
+    });
+  };
+  confirmProposedData = () => {
+    const { startAt, endAt } = this.state.proposedBooking;
+    const days = getRangeOfDates(startAt, endAt).length - 1;
+    const { rental } = this.props;
+
+    this.setState({
+      proposedBooking: {
+        ...this.state.proposedBooking,
+        days,
+        totalPrice: days * rental.dailyRate,
+        rental
+      },
+      modal: {
+        open: true
+      }
+    });
+  };
+  reserveRental = () => {
+    actions.createBooking(this.state.proposedBooking).then(
+      booking => {
+        // this.addNewBookedOutDates(booking);
+        // this.cancelConfirmation();
+        // this.resetData();
+        // toast.success("Booking has been succesfuly created! Enjoy.");
+      },
+      errors => {
+        this.setState({ errors });
+      }
+    );
+  };
   render() {
     const { rental } = this.props;
+    const { startAt, endAt, guests } = this.state.proposedBooking;
     return (
       <div className="booking">
         <h3 className="booking-price">
@@ -78,6 +140,7 @@ class Booking extends Component {
         <div className="form-group">
           <label htmlFor="guests">Guests</label>
           <input
+            onChange={this.selectGuests}
             type="number"
             className="form-control"
             id="guests"
@@ -85,7 +148,11 @@ class Booking extends Component {
             placeholder=""
           />
         </div>
-        <button className="btn btn-bwm btn-confirm btn-block">
+        <button
+          onClick={this.confirmProposedData}
+          className="btn btn-bwm btn-confirm btn-block"
+          disabled={!startAt || !endAt || !guests}
+        >
           Reserve place now
         </button>
         <hr />
@@ -95,6 +162,14 @@ class Booking extends Component {
         <p className="booking-note-text">
           More than 500 people checked this rental in last month.
         </p>
+        <BookingModal
+          open={this.state.modal.open}
+          closeModal={this.cancelConfirmation}
+          confirmModal={this.reserveRental}
+          booking={this.state.proposedBooking}
+          errors={this.state.errors}
+          rentalPrice={rental.dailyRate}
+        />
       </div>
     );
   }

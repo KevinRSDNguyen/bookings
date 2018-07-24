@@ -28,7 +28,7 @@ class Header extends Component {
     );
   }
   render() {
-    const { username, isAuth } = this.props.auth;
+    const { isAuth } = this.props.auth;
     return (
       <nav className="navbar navbar-dark navbar-expand-lg">
         <div className="container">
