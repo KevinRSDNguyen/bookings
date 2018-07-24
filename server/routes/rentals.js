@@ -14,6 +14,8 @@ router.get("/secret", UserCtrl.authMiddleware, function(req, res) {
 //ROUTE: /api/v1/rentals
 router.get("/", (req, res) => {
   Rental.find({})
+    .select("-bookings") //Exclude booking info for each document
+    .exec()
     .then(foundRentals => {
       res.json(foundRentals);
     })
@@ -25,6 +27,9 @@ router.get("/", (req, res) => {
 //ROUTE: /api/v1/rentals/:id
 router.get("/:id", (req, res) => {
   Rental.findById(req.params.id)
+    .populate("user", "username -_id") //Just username of user and NO _id
+    .populate("bookings", "startAt endAt -_id")
+    .exec()
     .then(foundRental => {
       res.json(foundRental);
     })
