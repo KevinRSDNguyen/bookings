@@ -20,6 +20,7 @@ import {
 const axiosInstance = axiosService.getInstance();
 
 export const fetchRentalByIdInit = () => {
+  //Used to clear data
   return {
     type: FETCH_RENTAL_BY_ID_INIT
   };
@@ -39,10 +40,28 @@ const fetchRentalsSuccess = rentals => {
   };
 };
 
-export const fetchRentals = () => dispatch => {
-  axiosInstance.get(`/rentals`).then(({ data }) => {
-    dispatch(fetchRentalsSuccess(data));
-  });
+const fetchRentalsInit = () => {
+  //Used to empty out data
+  return {
+    type: FETCH_RENTALS_INIT
+  };
+};
+
+const fetchRentalsFail = errors => {
+  return {
+    type: FETCH_RENTALS_FAIL,
+    errors
+  };
+};
+
+export const fetchRentals = city => dispatch => {
+  const url = city ? `/rentals?city=${city}` : "/rentals";
+  dispatch(fetchRentalsInit());
+
+  axiosInstance
+    .get(url)
+    .then(({ data }) => dispatch(fetchRentalsSuccess(data)))
+    .catch(({ response }) => dispatch(fetchRentalsFail(response.data.errors)));
 };
 
 export const fetchRentalById = rentalId => dispatch => {

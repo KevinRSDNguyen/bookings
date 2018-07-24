@@ -24,7 +24,7 @@ export const rentalReducer = (state = INITIAL_STATE.rentals, action) => {
       return { ...state, data: action.rentals };
     case FETCH_RENTALS_FAIL:
       // return Object.assign({}, state, { errors: action.errors, data: [] });
-      return { ...state, errors: action.erros, data: [] };
+      return { ...state, errors: action.errors, data: [] };
     default:
       return state;
   }
