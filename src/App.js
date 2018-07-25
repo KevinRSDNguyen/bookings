@@ -6,10 +6,11 @@ import Header from "components/shared/Header";
 import RentalListing from "./components/rental/rental-listing/RentalListing";
 import RentalSearchListing from "components/rental/rental-listing/RentalSearchListing";
 import RentalDetail from "./components/rental/rental-detail/RentalDetail";
+import RentalCreate from "components/rental/rental-create/RentalCreate";
 import Login from "components/login/Login";
 import Register from "components/register/Register";
 
-// import ProtectedRoute from "components/shared/auth/ProtectedRoute";
+import ProtectedRoute from "components/shared/auth/ProtectedRoute";
 import LoggedInRoute from "components/shared/auth/LoggedInRoute";
 
 import { checkAuthState, logout } from "actions";
@@ -34,6 +35,11 @@ class App extends Component {
               exact
               path="/rentals/:city/homes"
               component={RentalSearchListing}
+            />
+            <ProtectedRoute
+              exact
+              path="/rentals/new"
+              component={RentalCreate}
             />
             <Route exact path="/rentals/:id" component={RentalDetail} />
             <Route exact path="/login" component={Login} />
