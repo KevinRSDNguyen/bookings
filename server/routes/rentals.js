@@ -18,8 +18,48 @@ router.get("/:id", (req, res) => {
     })
     .catch(err => {
       res.status(422).send({
-        errors: [{ title: "Rental Error!", detail: "Could not find rental" }]
+        errors: [{ detail: "Could not find rental" }]
       });
+    });
+});
+
+//ROUTE: /api/v1/rentals/:id
+// Delete rental by id
+router.delete("/:id", UserCtrl.authMiddleware, function(req, res) {
+  const user = res.locals.user;
+
+  Rental.findById(req.params.id)
+    .populate("user", "_id")
+    .populate({
+      path: "bookings",
+      select: "startAt",
+      match: { startAt: { $gt: new Date() } }
+    })
+    .exec()
+    .then(foundRental => {
+      if (user.id !== foundRental.user.id) {
+        return res.status(422).send({
+          errors: [{ detail: "Invalid User! You are not rental owner!" }]
+        });
+      }
+
+      if (foundRental.bookings.length > 0) {
+        return res.status(422).send({
+          errors: [
+            {
+              detail: "Cannot delete rental with active bookings!"
+            }
+          ]
+        });
+      }
+
+      return foundRental.remove();
+    })
+    .then(() => {
+      return res.json({ status: "deleted" });
+    })
+    .catch(err => {
+      return res.status(422).json({ errors: normalizeErrors(err) });
     });
 });
 
@@ -70,7 +110,7 @@ router.post("", UserCtrl.authMiddleware, function(req, res) {
       res.json(newRentalToReturn);
     })
     .catch(err => {
-      return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      return res.status(422).send({ errors: normalizeErrors(err) });
     });
 });
 
@@ -88,7 +128,6 @@ router.get("/", (req, res) => {
         return res.status(422).send({
           errors: [
             {
-              title: "No Rentals Found!",
               detail: `There are no rentals for the city of ${city}`
             }
           ]
@@ -97,7 +136,7 @@ router.get("/", (req, res) => {
       res.json(foundRentals);
     })
     .catch(err => {
-      return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      return res.status(422).json({ errors: normalizeErrors(err) });
     });
 });
 

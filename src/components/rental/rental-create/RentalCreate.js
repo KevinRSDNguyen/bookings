@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import RentalCreateForm from "./RentalCreateForm";
+import { Redirect } from "react-router-dom";
 
 import * as actions from "actions";
 
@@ -15,9 +16,15 @@ class RentalCreate extends Component {
     this.rentalCateogies = ["Apartment", "House", "Condo"];
   }
   submitCb = rentalData => {
-    console.log(rentalData);
+    actions
+      .createRental(rentalData)
+      .then(rental => this.setState({ redirect: true }))
+      .catch(errors => this.setState({ errors }));
   };
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/rentals" />;
+    }
     return (
       <section id="newRental">
         <div className="bwm-form">

@@ -91,5 +91,6 @@ const RentalCreateForm = props => {
 };
 
 export default reduxForm({
-  form: "rentalCreateForm" // a unique identifier for this form
+  form: "rentalCreateForm", // a unique identifier for this form
+  initialValues: { shared: false, category: "apartment" }
 })(RentalCreateForm);

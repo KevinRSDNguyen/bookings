@@ -8,9 +8,7 @@ exports.auth = function(req, res) {
 
   if (!password || !email) {
     return res.status(422).send({
-      errors: [
-        { title: "Data missing!", detail: "Provide email and password!" }
-      ]
+      errors: [{ detail: "Provide email and password!" }]
     });
   }
 
@@ -18,7 +16,7 @@ exports.auth = function(req, res) {
     .then(user => {
       if (!user) {
         return res.status(422).send({
-          errors: [{ title: "Invalid User!", detail: "User does not exist" }]
+          errors: [{ detail: "User does not exist" }]
         });
       }
 
@@ -35,12 +33,12 @@ exports.auth = function(req, res) {
         return res.json(token);
       } else {
         return res.status(422).send({
-          errors: [{ title: "Wrong Data!", detail: "Wrong email or password" }]
+          errors: [{ detail: "Wrong email or password" }]
         });
       }
     })
     .catch(err => {
-      return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      return res.status(422).send({ errors: normalizeErrors(err) });
     });
 };
 
@@ -88,7 +86,7 @@ exports.register = function(req, res) {
       return user.save().then(() => res.json({ registered: true }));
     })
     .catch(err => {
-      return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      return res.status(422).send({ errors: normalizeErrors(err) });
     });
 };
 
@@ -120,11 +118,9 @@ function parseToken(token) {
 }
 
 function notAuthorized(res) {
-  return res
-    .status(401)
-    .send({
-      errors: [
-        { title: "Not authorized!", detail: "You need to login to get access!" }
-      ]
-    });
+  return res.status(401).send({
+    errors: [
+      { title: "Not authorized!", detail: "You need to login to get access!" }
+    ]
+  });
 }

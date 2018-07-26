@@ -71,10 +71,22 @@ export const fetchRentalById = rentalId => dispatch => {
   });
 };
 
+export const createRental = rentalData => {
+  return axiosInstance
+    .post("/rentals", rentalData)
+    .then(res => res.data)
+    .catch(err => {
+      return Promise.reject(err.response.data.errors);
+    });
+};
+
 // Auth Actions
 const loginSuccess = () => {
+  const username = authService.getUsername();
+
   return {
-    type: LOGIN_SUCCESS
+    type: LOGIN_SUCCESS,
+    username
   };
 };
 

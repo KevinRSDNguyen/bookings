@@ -12,14 +12,13 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isAuth: true,
-        token: action.token,
         errors: [],
         username: action.username
       };
     case LOGIN_FAILURE:
       return { ...state, errors: action.errors };
     case LOGOUT:
-      return { ...state, isAuth: false, token: "" };
+      return { ...state, isAuth: false, username: "" };
     default:
       return state;
   }

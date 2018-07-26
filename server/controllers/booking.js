@@ -19,7 +19,6 @@ exports.createBooking = function(req, res) {
         return res.status(422).send({
           errors: [
             {
-              title: "Invalid User!",
               detail: "Cannot create booking on your own Rental!"
             }
           ]
@@ -44,12 +43,14 @@ exports.createBooking = function(req, res) {
           })
           .then(() => {
             return res.json({ startAt: booking.startAt, endAt: booking.endAt });
+          })
+          .catch(err => {
+            return res.status(422).send({ errors: normalizeErrors(err) });
           });
       } else {
         return res.status(422).send({
           errors: [
             {
-              title: "Invalid Booking!",
               detail: "Choosen dates are already taken!"
             }
           ]
@@ -57,7 +58,7 @@ exports.createBooking = function(req, res) {
       }
     })
     .catch(err => {
-      return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      return res.status(422).send({ errors: normalizeErrors(err) });
     });
 };
 
