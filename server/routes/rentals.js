@@ -6,6 +6,22 @@ const { normalizeErrors } = require("../helpers/mongoose");
 
 const UserCtrl = require("../controllers/user");
 
+//ROUTE: /api/v1/rentals/manage
+// Fetch rental owned by user
+router.get("/manage", UserCtrl.authMiddleware, function(req, res) {
+  const user = res.locals.user;
+
+  Rental.find({ user })
+    .populate("bookings")
+    .exec()
+    .then(foundRentals => {
+      return res.json(foundRentals);
+    })
+    .catch(err => {
+      return res.status(422).send({ errors: normalizeErrors(err) });
+    });
+});
+
 //ROUTE: /api/v1/rentals/:id
 // Fetch rental by id
 router.get("/:id", (req, res) => {
@@ -29,8 +45,9 @@ router.delete("/:id", UserCtrl.authMiddleware, function(req, res) {
   const user = res.locals.user;
 
   Rental.findById(req.params.id)
-    .populate("user", "_id")
+    .populate("user", "_id") //Just want the _id of user
     .populate({
+      //Populate only with bookings after todays date
       path: "bookings",
       select: "startAt",
       match: { startAt: { $gt: new Date() } }

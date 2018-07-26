@@ -7,6 +7,7 @@ const BookingCtrl = require("../controllers/booking");
 // ROUTE /api/v1/bookings
 router.post("", UserCtrl.authMiddleware, BookingCtrl.createBooking);
 
-// router.get("/manage", UserCtrl.authMiddleware, BookingCtrl.getUserBookings);
+// ROUTE /api/v1/bookings/manage
+router.get("/manage", UserCtrl.authMiddleware, BookingCtrl.getUserBookings);
 
 module.exports = router;
