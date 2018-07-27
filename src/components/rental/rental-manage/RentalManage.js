@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import * as actions from "actions";
 import { Link } from "react-router-dom";
 import RentalManageCard from "./RentalManageCard";
+import RentalManageModal from "./RentalManageModal";
+import { ToastContainer, toast } from "react-toastify";
 
 class RentalManage extends Component {
   state = {
@@ -17,21 +19,37 @@ class RentalManage extends Component {
       .then(userRentals => this.setState({ userRentals, isFetching: false }))
       .catch(errors => this.setState({ errors, isFetching: false }));
   }
-  renderRentalCards(rentals) {
+  renderRentalCards = rentals => {
     return rentals.map((rental, index) => (
       <RentalManageCard
-        // modal={<RentalManageModal bookings={rental.bookings} />}
+        modal={<RentalManageModal bookings={rental.bookings} />}
         key={index}
         rental={rental}
         rentalIndex={index}
-        // deleteRentalCb={this.deleteRental}
+        deleteRentalCb={this.deleteRental}
       />
     ));
-  }
+  };
+  deleteRental = (rentalId, rentalIndex) => {
+    actions
+      .deleteRental(rentalId)
+      .then(() => {
+        this.deleteRentalFromList(rentalIndex);
+      })
+      .catch(errors => toast.error(errors[0].detail));
+  };
+
+  deleteRentalFromList = rentalIndex => {
+    const userRentals = [...this.state.userRentals];
+    userRentals.splice(rentalIndex, 1);
+
+    this.setState({ userRentals });
+  };
   render() {
     const { userRentals, isFetching } = this.state;
     return (
       <section id="userRentals">
+        <ToastContainer />
         <h1 className="page-title">My Rentals</h1>
         <div className="row">{this.renderRentalCards(userRentals)}</div>
         {!isFetching &&
