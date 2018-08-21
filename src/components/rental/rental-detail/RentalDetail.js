@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import RentalDetailInfo from "./RentalDetailInfo";
+import RentalDetailUpdate from "./RentalDetailUpdate";
 import RentalMap from "./RentalMap";
 import Booking from "components/booking/Booking";
 import { fetchRentalById } from "actions/index";
@@ -9,6 +10,15 @@ class RentalDetail extends Component {
   componentDidMount() {
     const rentalId = this.props.match.params.id;
     this.props.fetchRentalById(rentalId);
+  }
+  renderRentalDetail(rental) {
+    const { isUpdate } = this.props.location.state || false; //Given to us by rrd
+
+    return isUpdate ? (
+      <RentalDetailUpdate rental={rental} />
+    ) : (
+      <RentalDetailInfo rental={rental} />
+    );
   }
   render() {
     const { rental } = this.props;
@@ -29,9 +39,7 @@ class RentalDetail extends Component {
 
           <div className="details-section">
             <div className="row">
-              <div className="col-md-8">
-                <RentalDetailInfo rental={rental} />
-              </div>
+              <div className="col-md-8">{this.renderRentalDetail(rental)}</div>
               <div className="col-md-4">
                 {" "}
                 <Booking rental={rental} />

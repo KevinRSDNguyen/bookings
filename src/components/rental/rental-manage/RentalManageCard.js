@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 class RentalManageCard extends Component {
   state = {
-    wantDelete: false //Toggle delete menu
+    wantDelete: false //Toggle delete confirmation
   };
   showDeleteMenu = () => {
     this.setState({
@@ -39,10 +39,25 @@ class RentalManageCard extends Component {
           <div className="card-footer text-muted">
             Created at {pretifyDate(rental.createdAt)}
             {!wantDelete && (
-              <button onClick={this.showDeleteMenu} className="btn btn-danger">
-                {" "}
-                Delete{" "}
-              </button>
+              <React.Fragment>
+                <button
+                  onClick={this.showDeleteMenu}
+                  className="btn btn-danger"
+                >
+                  {" "}
+                  Delete{" "}
+                </button>
+                <Link
+                  className="btn btn-warning"
+                  to={{
+                    pathname: `/rentals/${rental._id}`,
+                    state: { isUpdate: true } //Allowed be rrd
+                  }}
+                >
+                  {" "}
+                  Edit{" "}
+                </Link>
+              </React.Fragment>
             )}
             {wantDelete && (
               <div className="delete-menu">

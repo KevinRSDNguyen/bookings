@@ -40,6 +40,39 @@ router.get("/:id", (req, res) => {
 });
 
 //ROUTE: /api/v1/rentals/:id
+// Update rental by id
+router.patch("/:id", UserCtrl.authMiddleware, function(req, res) {
+  const rentalData = req.body;
+  const user = res.locals.user;
+
+  Rental.findById(req.params.id)
+    .populate("user")
+    .exec()
+    .then(foundRental => {
+      if (foundRental.user.id !== user.id) {
+        return res.status(422).send({
+          errors: [
+            { title: "Invalid User!", detail: "You are not rental owner!" }
+          ]
+        });
+      }
+
+      foundRental.set(rentalData);
+      foundRental
+        .save()
+        .then(updatedRental => {
+          return res.status(200).send(updatedRental);
+        })
+        .catch(err => {
+          return res.status(422).json({ errors: normalizeErrors(err) });
+        });
+    })
+    .catch(err => {
+      return res.status(422).json({ errors: normalizeErrors(err) });
+    });
+});
+
+//ROUTE: /api/v1/rentals/:id
 // Delete rental by id
 router.delete("/:id", UserCtrl.authMiddleware, function(req, res) {
   const user = res.locals.user;
@@ -70,10 +103,14 @@ router.delete("/:id", UserCtrl.authMiddleware, function(req, res) {
         });
       }
 
-      return foundRental.remove();
-    })
-    .then(() => {
-      return res.json({ status: "deleted" });
+      foundRental
+        .remove()
+        .then(() => {
+          return res.json({ status: "deleted" });
+        })
+        .catch(err => {
+          return res.status(422).json({ errors: normalizeErrors(err) });
+        });
     })
     .catch(err => {
       return res.status(422).json({ errors: normalizeErrors(err) });
