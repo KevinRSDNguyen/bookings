@@ -1,15 +1,23 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import RentalAssets from "./RentalAssets";
 import { toUpperCase, rentalType } from "helpers";
 
 import EditableInput from "./../../shared/editable/EditableInput";
+import EditableTextArea from "./../../shared/editable/EditableTextArea";
+import { updateRental } from "actions";
 
 class RentalDetailUpdate extends Component {
+  updateRental = rentalData => {
+    const {
+      rental: { _id }
+    } = this.props;
+    this.props.updateRental(_id, rentalData);
+  };
   render() {
     const { rental } = this.props;
     return (
       <div className="rental">
-        <h1>UPdate Rental</h1>
         <h2 className={`rental-type ${rental.category}`}>
           {rentalType(rental.shared)} {rental.category}
         </h2>
@@ -20,13 +28,35 @@ class RentalDetailUpdate extends Component {
           />
           <span>{rental.user && rental.user.username}</span>
         </div>
-        {/* <h1 className="rental-title">{rental.title}</h1> */}
-        <EditableInput entity={rental} entityField={"title"} />
-        <h2 className="rental-city">{toUpperCase(rental.city)}</h2>
+        <EditableInput
+          entity={rental}
+          entityField={"title"}
+          updateEntity={this.updateRental}
+          className={"rental-title"}
+        />
+        <EditableInput
+          entity={rental}
+          entityField={"city"}
+          updateEntity={this.updateRental}
+          className={"rental-city"}
+        />
+        <EditableInput
+          entity={rental}
+          entityField={"street"}
+          updateEntity={this.updateRental}
+          className={"rental-street"}
+        />
         <div className="rental-room-info">
           <span>
             <i className="fa fa-building" />
-            {rental.bedrooms} bedrooms
+            <EditableInput
+              entity={rental}
+              entityField={"bedrooms"}
+              updateEntity={this.updateRental}
+              className={"rental-bedrooms"}
+              containerStyle={{ display: "inline-block" }}
+            />{" "}
+            bedrooms
           </span>
           <span>
             <i className="fa fa-user" /> {rental.bedrooms + 4} guests
@@ -35,7 +65,15 @@ class RentalDetailUpdate extends Component {
             <i className="fa fa-bed" /> {rental.bedrooms + 2} beds
           </span>
         </div>
-        <p className="rental-description">{rental.description}</p>
+        {/* <p className="rental-description">{rental.description}</p> */}
+        <EditableTextArea
+          entity={rental}
+          entityField={"description"}
+          updateEntity={this.updateRental}
+          className={"rental-description"}
+          rows={6}
+          cols={50}
+        />
         <hr />
         <RentalAssets />
       </div>
@@ -43,4 +81,7 @@ class RentalDetailUpdate extends Component {
   }
 }
 
-export default RentalDetailUpdate;
+export default connect(
+  null,
+  { updateRental }
+)(RentalDetailUpdate);

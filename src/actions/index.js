@@ -13,7 +13,9 @@ import {
   LOGOUT,
   FETCH_USER_BOOKINGS_SUCCESS,
   FETCH_USER_BOOKINGS_FAIL,
-  FETCH_USER_BOOKINGS_INIT
+  FETCH_USER_BOOKINGS_INIT,
+  UPDATE_RENTAL_SUCCESS,
+  UPDATE_RENTAL_FAIL
 } from "./types";
 
 // Rental Actions
@@ -78,6 +80,34 @@ export const createRental = rentalData => {
     .catch(err => {
       return Promise.reject(err.response.data.errors);
     });
+};
+
+const updateRentalSuccess = updatedRental => {
+  return {
+    type: UPDATE_RENTAL_SUCCESS,
+    rental: updatedRental
+  };
+};
+
+const updateRentalFail = errors => {
+  return {
+    type: UPDATE_RENTAL_FAIL,
+    errors
+  };
+};
+
+export const updateRental = (id, rentalData) => dispatch => {
+  return axiosInstance
+    .patch(`/rentals/${id}`, rentalData)
+    .then(({ data }) => {
+      dispatch(updateRentalSuccess(data));
+
+      // if (rentalData.city || rentalData.street) {
+      //   dispatch(reloadMap());
+      // }
+    })
+    .then(updatedRental => {})
+    .catch(({ response }) => dispatch(updateRentalFail(response.data.errors)));
 };
 
 // USER BOOKINGS ACTIONS ---------------------------

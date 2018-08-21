@@ -17,6 +17,7 @@ const RentalDetailInfo = ({ rental }) => {
       </div>
       <h1 className="rental-title">{rental.title}</h1>
       <h2 className="rental-city">{toUpperCase(rental.city)}</h2>
+      <p className="rental-street">{rental.street}</p>
       <div className="rental-room-info">
         <span>
           <i className="fa fa-building" />
