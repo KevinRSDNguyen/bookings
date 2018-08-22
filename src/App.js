@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 
+import { ToastContainer } from "react-toastify";
 import Header from "components/shared/Header";
 import RentalListing from "./components/rental/rental-listing/RentalListing";
 import RentalSearchListing from "components/rental/rental-listing/RentalSearchListing";
@@ -30,6 +31,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <ToastContainer />
         <Header logout={this.logout} />
         <div className="container">
           <Switch>

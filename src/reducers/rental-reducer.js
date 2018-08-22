@@ -5,7 +5,8 @@ import {
   FETCH_RENTALS_INIT,
   FETCH_RENTALS_FAIL,
   UPDATE_RENTAL_SUCCESS,
-  UPDATE_RENTAL_FAIL
+  UPDATE_RENTAL_FAIL,
+  RESET_RENTAL_ERRORS
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -44,6 +45,8 @@ export const selectedRentalReducer = (state = INITIAL_STATE.rental, action) => {
       return { ...state, data: action.rental };
     case UPDATE_RENTAL_FAIL:
       return { ...state, errors: action.errors };
+    case RESET_RENTAL_ERRORS:
+      return { ...state, errors: [] };
     default:
       return state;
   }

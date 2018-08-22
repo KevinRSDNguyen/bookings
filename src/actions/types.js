@@ -17,3 +17,6 @@ export const RESET_RENTAL_ERRORS = "RESET_RENTAL_ERRORS";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
 export const LOGOUT = "LOGOUT";
+
+export const RELOAD_MAP = "RELOAD_MAP";
+export const RELOAD_MAP_FINISH = "RELOAD_MAP_FINISH";

@@ -15,11 +15,26 @@ import {
   FETCH_USER_BOOKINGS_FAIL,
   FETCH_USER_BOOKINGS_INIT,
   UPDATE_RENTAL_SUCCESS,
-  UPDATE_RENTAL_FAIL
+  UPDATE_RENTAL_FAIL,
+  RESET_RENTAL_ERRORS,
+  RELOAD_MAP,
+  RELOAD_MAP_FINISH
 } from "./types";
 
 // Rental Actions
 const axiosInstance = axiosService.getInstance();
+
+export const reloadMap = () => {
+  return {
+    type: RELOAD_MAP
+  };
+};
+
+export const reloadMapFinish = () => {
+  return {
+    type: RELOAD_MAP_FINISH
+  };
+};
 
 export const fetchRentalByIdInit = () => {
   //Used to clear data
@@ -82,6 +97,12 @@ export const createRental = rentalData => {
     });
 };
 
+export const resetRentalErrors = () => {
+  return {
+    type: RESET_RENTAL_ERRORS
+  };
+};
+
 const updateRentalSuccess = updatedRental => {
   return {
     type: UPDATE_RENTAL_SUCCESS,
@@ -102,9 +123,9 @@ export const updateRental = (id, rentalData) => dispatch => {
     .then(({ data }) => {
       dispatch(updateRentalSuccess(data));
 
-      // if (rentalData.city || rentalData.street) {
-      //   dispatch(reloadMap());
-      // }
+      if (rentalData.city || rentalData.street) {
+        dispatch(reloadMap());
+      }
     })
     .then(updatedRental => {})
     .catch(({ response }) => dispatch(updateRentalFail(response.data.errors)));
